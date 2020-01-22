@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>http://www.blueb.co.kr</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+	<script language="javascript" type="text/javascript" src="jquery.flot.min.js"></script>
+
+<STYLE type=text/css>
+	body, td{font-size: 12px; color: #000000; font-family: verdana}
+	a{text-decoration:none}
+	A:hover {color: #ff0000; text-decoration: none}
+	input {font-family: verdana; border-style: ridge; background-color: #EEEEEE}
+	.ud input { width: 60px; }
+	td{font-size: 10px; color: #808080; text-align: center; }
+</style>
+</head>
+
+<body>
+
+	<table>
+		<tr class="h">
+			<td colspan=3><i>생일을 입력하세요.</i></td>
+		</tr>
+		<tr class="h ud">
+			<td><input type="text" id="y" value="" /></td>
+			<td><input type="text" id="m" value="" /></td>
+			<td><input type="text" id="d" value="" /></td>
+		</tr>
+		<tr class="h">
+			<td><strong>Year</strong><br /><i>(eg. 1972)</i></td>
+			<td><strong>Month</strong><br /><i>(eg. 12)</i></td>
+			<td><strong>Day</strong><br /><i>(eg. 25)</i></td>
+		</tr>
+		<tr>
+			<td colspan=3 class="h"><br /><input id="cz" type="submit" value="바이오리듬 보여주세요" /></td>
+		</tr>
+		<tr>
+			<td colspan=3>
+			<div class="s" style="width:300px; display: none;">
+				<table width=300>
+					<tr>
+						<td width=50>&nbsp;</td>
+						<td><span style="width:20px;height:20px;background-color:#EDC240;"> &nbsp;- </span>&nbsp;<i>체력</i></td>
+						<td><span style="width:20px;height:20px;background-color:#AFD8F8;"> &nbsp;- </span>&nbsp;<i>감성</i></td>
+						<td><span style="width:20px;height:20px;background-color:#CB4B4B;"> &nbsp;- </span>&nbsp;<i>지성</i></td>
+					</tr>
+				</table>
+			</div>
+			<div id="bd" style="width:300px;height:200px">
+				<div style="text-align: left;"><br />15일간의 당신의 바이오리듬을 보여줍니다. 개인정보는 저장되거나 전송되지 않고 바이오리듬 확인용도로만 사용됩니다.</div>
+			</div><br />
+			<div id="zd"></div>
+			</td>
+		</tr>
+	</table>
+
+<script type="text/javascript">
+$("#cz").click(function(){
+	td = new Date();
+
+	by = $("#y").val();
+	bm = $("#m").val();
+	bd = $("#d").val();
+
+	bdd = new Date(by, bm-1, bd);
+	var od = 1000*60*60*24;
+	var dsb = Math.ceil((td.getTime()-bdd.getTime())/(od))-1;
+	var nd = 15;
+	var wp = new Array();
+	var we = new Array();
+	var wi = new Array();
+	var dy = new Array();
+
+
+	for(var i = 0; i < nd; i++)
+	{
+		wp.push([i+1, Math.sin(2*Math.PI*(dsb+i)/23)*100]);
+		we.push([i+1, Math.sin(2*Math.PI*(dsb+i)/28)*100]);
+		wi.push([i+1, Math.sin(2*Math.PI*(dsb+i)/33)*100]);
+
+		to_d = td.getDate();
+		dy.push([i, to_d]);
+		td.setTime(td.getTime() + 86400000);
+	}
+
+	$(document).ready(function(){
+		$.plot($("#bd"), [
+			{
+				data: wp,
+			},
+			{
+				data: we,
+			},
+			{
+				data: wi,
+			},
+			
+		], {
+			series:
+			{
+				lines: { show: true },
+			},
+			xaxis:
+			{
+				ticks: dy,
+			},
+			yaxis:
+			{
+				ticks: 10,
+				min: -110,
+				max: 110
+			},
+			grid: {
+				backgroundColor: { colors: ["#fff", "#eee"] },
+			},
+		});
+
+		$(".h").css("display", "none");
+		$(".s").css("display", "block");
+		sg();
+	});
+});
+</script>
+<script src="jquery.bio.js"></script>
+
+</body>
+</html>
